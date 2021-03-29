@@ -1,0 +1,26 @@
+'''
+贪心策略：每一天选择当前可参加的会议中结束时间最早的会议
+
+def maxEvents(events):
+    ans, T = 0, 0 # 记录参加的会议数目，最大天数
+    # dic_evt[i] 是一个列表 包含在第i天开始的会所有议的结束时间; T 是总时间长度
+    dic_evt = defaultdict(list)
+    for evt in events:
+        dic_evt[evt[0]].append(evt[1])
+        T=max(T,evt[1])
+    # 对时间1～T遍历 每一个时刻t，que_able保存当前可参加的会议的结束时间
+    que_able = []
+    for t in range(1, T+1):
+        # 对于每一天,把当前天开始的会议加进去堆里
+        for end in dic_evt[t]: 
+            heapq.heappush(que_able, end)
+        # 结束时间大于t的会议中参加结束时间最早的会议 (将结束时间小于t的会议pop) 
+        while que_able and que_able[0]<t: 
+            heapq.heappop(que_able)
+        # 此时que_able中都是结束时间大于t的会议所对应的结束时间
+        if que_able:
+            ans+=1
+            heapq.heappop(que_able)
+    return ans
+
+'''
